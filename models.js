@@ -1,3 +1,8 @@
+'use strict';
+
+const DEFAULT_WIDTH = 7;
+const DEFAULT_HEIGHT = 6;
+
 class Gameboard {
 /*
   What does this have?
@@ -12,9 +17,9 @@ class Gameboard {
 
 */
 
-  constructor(boardWidth, boardHeight) {
-    this.boardWidth = boardWidth;     // Generally 7
-    this.boardHeight = boardHeight;   // Generally 6
+  constructor(boardWidth = DEFAULT_WIDTH, boardHeight = DEFAULT_HEIGHT) {
+    this.boardWidth = boardWidth;
+    this.boardHeight = boardHeight;
     this.spots = this.setupBoard(boardWidth, boardHeight);
   }
 
@@ -110,10 +115,8 @@ class Gameboard {
         const checks = [[x, y], [x+1, y-1], [x+2, y-2], [x+3, y-3], [x+4, y-4]];
         let checkCount = 0;
         for (let [posX, posY] of checks) {
-          console.log(posX, posY);
           if (this.spots[posY][posX] === null
               || this.spots[posY][posX].color !== color) {
-            console.log(`Breaking out of checks at postion ${posX}, ${posY}.`);
             break;
           }
           checkCount++;
@@ -122,10 +125,62 @@ class Gameboard {
       }
     }
     return false;
-
   }
 
 
+  /** Check for a win horizontally. Takes a color to check for,
+   *  and returns true if that color has won or false if not.
+   */
+  checkWinHoriz(color) {
+    for (let i = 0; i < this.boardWidth - 4; i++) {
+      for (let j = 0; j < this.boardHeight; j++) {
+        const x = i;
+        const y = j;
+        const checks = [[x, y], [x+1, y], [x+2, y], [x+3, y], [x+4, y]];
+        let checkCount = 0;
+        for (let [posX, posY] of checks) {
+          if (this.spots[posY][posX] === null
+              || this.spots[posY][posX].color !== color) {
+            break;
+          }
+          checkCount++;
+          if (checkCount === checks.length) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Check for a win vertically. Takes a color to check for,
+   *  and returns true if that color has won or false if not.
+   */
+  checkWinVert(color) {
+    for (let i = 0; i < this.boardWidth; i++) {
+      for (let j = 0; j < this.boardHeight - 4; j++) {
+        const x = i;
+        const y = j;
+        const checks = [[x, y], [x, y+1], [x, y+2], [x, y+3], [x, y+4]];
+        let checkCount = 0;
+        for (let [posX, posY] of checks) {
+          if (this.spots[posY][posX] === null
+              || this.spots[posY][posX].color !== color) {
+            break;
+          }
+          checkCount++;
+          if (checkCount === checks.length) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Check for wins in each of the four possible orientations: h, v, ur, dr.
+   *  Input: color to check for. Output: true or false to signify win or not.
+   */
+  checkWin(color) {
+    return (this.checkWinHoriz(color) || this.checkWinVert(color)
+            || this.checkWinUR(color) || this.checkWinDR(color));
+  }
 
 }
 
