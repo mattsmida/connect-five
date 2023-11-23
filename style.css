@@ -1,3 +1,39 @@
 body {
   background-color: #91c3f2;
 }
+
+table {
+  border-spacing: 0px;
+  padding: 10px;
+}
+
+td {
+  border: solid white 1px;
+  text-align: center;
+  height: 60px;
+  width: 60px;
+}
+
+#spot-selection-zone {
+  height: 50px;
+}
+
+th {
+  border: dotted white 1px;
+
+}
+
+
+th:hover {
+  background-color: lightyellow;
+}
+
+.piece {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin: 10px;
+}
+
+.piece.red { background-color: darkred; }
+.piece.blue { background-color: darkblue; }
