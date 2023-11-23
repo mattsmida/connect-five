@@ -176,32 +176,29 @@ class Gameboard {
     return this.spots.every(row => !row.includes(null));
   }
 
-  /** This method runs the game. It anticipates the placement of a piece,
+  /** This method represents one turn. It anticipates the placement of a piece,
    *  then validates the move, checks for game-ends, and switches the turn
    *  of the players. Input: both player objects. Output: none.
    */
-  runGame(p1, p2) {
+  oneTurn(p1, p2, columnChoice) {
+    console.log(`p1's turn? `, p1.myTurn);
     const currentPlayer = p1.myTurn ? p1 : p2;
-    const columnChoice = prompt(`${currentPlayer.color}, where will you go?`);
-
-    if(this.placePiece(columnChoice, currentPlayer === false)) {
-      alert(`Invalid move. Make a valid move, ${currentPlayer.color}.`);
-      this.runGame(p1, p2);
-      return undefined;
-    }
 
     if (this.checkWin(currentPlayer.color)) {
-      alert(`${currentPlayer.color} is victorious.`);
-      return undefined;
+      setTimeout(() => {
+        alert(`${currentPlayer.color} is victorious.`);
+        return undefined;
+      }, 1000);
     }
 
     if (this.checkStalemate()) {
-      alert(`Welcome to this stalemate.`);
-      return undefined;
+      setTimeout(() => {
+        alert(`Welcome to this stalemate.`);
+        return undefined;
+      }, 1000);
     }
 
     this.alternateTurn(p1, p2);
-    this.runGame(p1, p2);
   }
 
 }

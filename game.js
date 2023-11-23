@@ -35,9 +35,11 @@ function placePieceOnDom(row, col, player){
 
 // Event listener to run placePiece on the appropriate column.
 $($spotSelectionZone).on('click', function(e) {
+  const currentPlayer = p1.myTurn ? p1 : p2;
   const col = e.target.id.slice(-1);
-  const row = gb.placePiece(col, p1);
-  placePieceOnDom(row, col, p1);
+  const row = gb.placePiece(col, currentPlayer);
+  gb.oneTurn(p1, p2, col);
+  placePieceOnDom(row, col, currentPlayer);
 })
 
 let gb = new Gameboard();
