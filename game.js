@@ -2,6 +2,7 @@
 
 const $gameboard = $('#game-board');
 const $spotSelectionZone = $('#spot-selection-zone');
+const $colorSelection = $('#color-selection');
 
 /** This function populates a board on the DOM. Input: an instance
  *  of Gameboard. Output: none.
@@ -30,11 +31,13 @@ function populateDomBoard(gb) {
  */
 function placePieceOnDom(row, col, player){
   console.log(`x, y = ${col}, ${row}`);
-  $(`#x${col}-y${row}`).append(`<div class='piece ${player.color}'></div>`);
+  let $pieceToPlace = $(`<div class='piece'></div>`);
+  $pieceToPlace.css('background-color', player.color);
+  $(`#x${col}-y${row}`).append($pieceToPlace);
 }
 
 // Event listener to run placePiece on the appropriate column.
-$($spotSelectionZone).on('click', function(e) {
+$spotSelectionZone.on('click', function(e) {
   const currentPlayer = p1.myTurn ? p1 : p2;
   const col = e.target.id.slice(-1);
   const row = gb.placePiece(col, currentPlayer);
@@ -42,11 +45,26 @@ $($spotSelectionZone).on('click', function(e) {
   placePieceOnDom(row, col, currentPlayer);
 })
 
-let gb = new Gameboard();
-let p1 = new Player('red', true);
-let p2 = new Player('blue', false);
-populateDomBoard(gb);
 
+
+let p1Color;
+let p2Color;
+
+let gb;
+let p1;
+let p2;
+
+// Event listener to use the form to set the colors for the competitors
+$colorSelection.on('submit', function(e) {
+  e.preventDefault();
+  p1Color = $('#p1-color-choice').val();
+  p2Color = $('#p2-color-choice').val();
+  console.log(p1Color, p2Color);
+  gb = new Gameboard();
+  p1 = new Player(p1Color, true);
+  p2 = new Player(p2Color, false);
+  populateDomBoard(gb);
+})
 
 /*
 Notes zone

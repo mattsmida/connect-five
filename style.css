@@ -34,6 +34,3 @@ th:hover {
   width: 40px;
   margin: 10px;
 }
-
-.piece.red { background-color: darkred; }
-.piece.blue { background-color: darkblue; }
