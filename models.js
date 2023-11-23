@@ -6,12 +6,12 @@ const DEFAULT_HEIGHT = 6;
 class Gameboard {
 /*
   What does this have?
-  - Spots for all of the pieces
+  ✓ Spots for all of the pieces
     - (Don't go outside the board!)
   - Information about whose turn it is
 
   What should this do?
-  - A way to check whether someone has won
+  ✓ A way to check whether someone has won
   - Move validation (e.g., can't place a piece in a filled column)
   - Display properties for the game board
 
@@ -39,94 +39,35 @@ class Gameboard {
 
   /** Put a piece on the board. Input is the column and the current player.
    *  (Row is not needed because of the gravity of the situation.) Modifies
-   *  the gameboard's spots property, and returns true on successful
+   *  the gameboard's spots property, and returns the y-coord on successful
    *  placement or false if a piece cannot be placed in that column.
    */
   placePiece(col, player) {
     // For the given column (i.e., postions[y][col]), find the lowest spot.
-    // Put a piece belonging to the current player there, and return true.
+    // Put a piece belonging to the current player there, and return y.
     // If the whole column is full, return false.
     for (let y = this.boardHeight - 1; y >= 0; y--) {
       if (this.spots[y][col] === null) {
-        // this.spots[y][col] = new Piece(player);
         this.spots[y][col] = new Piece(player.color);
-        return true;
+        return y;
       }
     }
     return false;
   }
 
-
-  /** Given an array of all (two or more) players, pass the turn to the next.
+  /** Given player 1 and player 2, pass the turn to the next.
    *  This is done by setting the myTurn property of the current turn-taker
    *  to false and that of the next player to true. Nothing is returned.
    */
-  alternateTurn(allPlayers) {
-    for (let i = 0; i < allPlayers.length; i++) {
-      if (allPlayers[i].myTurn) {
-        allPlayers[i].myTurn = false;
-        if (i === allPlayers.length - 1) {
-          allPlayers[0].myTurn = true;
-        } else {
-          allPlayers[i+1].myTurn = true;
-        }
-      }
-
+  alternateTurn(p1, p2) {
+    if (p1.myTurn) {
+      p1.myTurn = false;
+      p2.myTurn = true;
+    } else {
+      p1.myTurn = true;
+      p2.myTurn = false;
     }
   }
-
-
-  // TODO: Ideal, not yet implemented:
-  /** Check for a win diagonally down and right. Takes no arguments, and
-   *  returns the winning color as a string or false if no winner.
-   */
-
-  /** Check for a win diagonally down and right. Takes a color to check for,
-   *  and returns true if that color has won or false if not.
-   */
-  checkWinDR(color){
-    for (let i = 0; i < this.boardWidth - 4; i++) {
-      for (let j = 0; j < this.boardHeight - 4; j++) {
-        const x = i;
-        const y = j;
-        const checks = [[x, y], [x+1, y+1], [x+2, y+2], [x+3, y+3], [x+4, y+4]];
-        let checkCount = 0;
-        for (let [posX, posY] of checks) {
-          if (this.spots[posY][posX] === null
-              || this.spots[posY][posX].color !== color) {
-            break;
-          }
-          checkCount++;
-          if (checkCount === checks.length) return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /** Check for a win diagonally up and right. Takes a color to check for,
-   *  and returns true if that color has won or false if not.
-   */
-  checkWinUR(color) {
-    for (let i = 0; i < this.boardWidth - 4; i++) {
-      for (let j = this.boardHeight - 1; j >= 4; j--) {
-        const x = i;
-        const y = j;
-        const checks = [[x, y], [x+1, y-1], [x+2, y-2], [x+3, y-3], [x+4, y-4]];
-        let checkCount = 0;
-        for (let [posX, posY] of checks) {
-          if (this.spots[posY][posX] === null
-              || this.spots[posY][posX].color !== color) {
-            break;
-          }
-          checkCount++;
-          if (checkCount === checks.length) return true;
-        }
-      }
-    }
-    return false;
-  }
-
 
   /** Check for a win horizontally. Takes a color to check for,
    *  and returns true if that color has won or false if not.
@@ -174,12 +115,93 @@ class Gameboard {
     return false;
   }
 
+  /** Check for a win diagonally down and right. Takes a color to check for,
+   *  and returns true if that color has won or false if not.
+   */
+  checkWinDR(color){
+    for (let i = 0; i < this.boardWidth - 4; i++) {
+      for (let j = 0; j < this.boardHeight - 4; j++) {
+        const x = i;
+        const y = j;
+        const checks = [[x, y], [x+1, y+1], [x+2, y+2], [x+3, y+3], [x+4, y+4]];
+        let checkCount = 0;
+        for (let [posX, posY] of checks) {
+          if (this.spots[posY][posX] === null
+              || this.spots[posY][posX].color !== color) {
+            break;
+          }
+          checkCount++;
+          if (checkCount === checks.length) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Check for a win diagonally up and right. Takes a color to check for,
+   *  and returns true if that color has won or false if not.
+   */
+  checkWinUR(color) {
+    for (let i = 0; i < this.boardWidth - 4; i++) {
+      for (let j = this.boardHeight - 1; j >= 4; j--) {
+        const x = i;
+        const y = j;
+        const checks = [[x, y], [x+1, y-1], [x+2, y-2], [x+3, y-3], [x+4, y-4]];
+        let checkCount = 0;
+        for (let [posX, posY] of checks) {
+          if (this.spots[posY][posX] === null
+              || this.spots[posY][posX].color !== color) {
+            break;
+          }
+          checkCount++;
+          if (checkCount === checks.length) return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /** Check for wins in each of the four possible orientations: h, v, ur, dr.
    *  Input: color to check for. Output: true or false to signify win or not.
    */
   checkWin(color) {
     return (this.checkWinHoriz(color) || this.checkWinVert(color)
             || this.checkWinUR(color) || this.checkWinDR(color));
+  }
+
+  /** Checks for stalemate via full board. No input.
+   *  Returns true if stalemate, false if not.
+   */
+  checkStalemate() {
+    return this.spots.every(row => !row.includes(null));
+  }
+
+  /** This method runs the game. It anticipates the placement of a piece,
+   *  then validates the move, checks for game-ends, and switches the turn
+   *  of the players. Input: both player objects. Output: none.
+   */
+  runGame(p1, p2) {
+    const currentPlayer = p1.myTurn ? p1 : p2;
+    const columnChoice = prompt(`${currentPlayer.color}, where will you go?`);
+
+    if(this.placePiece(columnChoice, currentPlayer === false)) {
+      alert(`Invalid move. Make a valid move, ${currentPlayer.color}.`);
+      this.runGame(p1, p2);
+      return undefined;
+    }
+
+    if (this.checkWin(currentPlayer.color)) {
+      alert(`${currentPlayer.color} is victorious.`);
+      return undefined;
+    }
+
+    if (this.checkStalemate()) {
+      alert(`Welcome to this stalemate.`);
+      return undefined;
+    }
+
+    this.alternateTurn(p1, p2);
+    this.runGame(p1, p2);
   }
 
 }
