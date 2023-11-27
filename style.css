@@ -7,6 +7,10 @@ table {
   padding: 10px;
 }
 
+#new-game {
+  display: none;
+}
+
 td {
   border: solid white 1px;
   text-align: center;
@@ -22,7 +26,6 @@ th {
   border: dotted white 1px;
 
 }
-
 
 th:hover {
   background-color: lightyellow;

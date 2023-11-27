@@ -1,6 +1,6 @@
 'use strict';
 
-const DEFAULT_WIDTH = 7;
+const DEFAULT_WIDTH = 9;
 const DEFAULT_HEIGHT = 6;
 
 class Gameboard {
@@ -21,6 +21,8 @@ class Gameboard {
     this.boardWidth = boardWidth;
     this.boardHeight = boardHeight;
     this.spots = this.setupBoard(boardWidth, boardHeight);
+    this.gameOver = false;
+    this.quickBreak = false;  // Enforce a brief pause between turns
   }
 
   /** Called during the construction of a game board. Inputs: height and width.
@@ -185,15 +187,19 @@ class Gameboard {
     const currentPlayer = p1.myTurn ? p1 : p2;
 
     if (this.checkWin(currentPlayer.color)) {
+      this.gameOver = true;
       setTimeout(() => {
         alert(`${currentPlayer.color} is victorious.`);
+        $newGame.show();
         return undefined;
       }, 1000);
     }
 
     if (this.checkStalemate()) {
+      this.gameOver = true;
       setTimeout(() => {
         alert(`Welcome to this stalemate.`);
+        $newGame.show();
         return undefined;
       }, 1000);
     }
@@ -214,16 +220,12 @@ class Player {
     this.color = color;
     this.myTurn = myTurn;
   }
-
-
-
 }
 
 class Piece {
   /*
   What does this have?
   - Color
-  - (There seems to be little to do in this class)
   */
 
   constructor(color) {
