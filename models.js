@@ -3,20 +3,11 @@
 const DEFAULT_WIDTH = 9;
 const DEFAULT_HEIGHT = 6;
 
+/** This class sets up and keeps track of the game state by holding positions
+ *  of pieces, checking for game-end conditions, alternating turns, and
+ *  validating moves. It also facilitates the game with the oneTurn function.
+ */
 class Gameboard {
-/*
-  What does this have?
-  ✓ Spots for all of the pieces
-    - (Don't go outside the board!)
-  - Information about whose turn it is
-
-  What should this do?
-  ✓ A way to check whether someone has won
-  - Move validation (e.g., can't place a piece in a filled column)
-  - Display properties for the game board
-
-*/
-
   constructor(boardWidth = DEFAULT_WIDTH, boardHeight = DEFAULT_HEIGHT) {
     this.boardWidth = boardWidth;
     this.boardHeight = boardHeight;
@@ -206,54 +197,48 @@ class Gameboard {
 
     this.alternateTurn(p1, p2);
   }
-
 }
 
-class Player {
-  /*
-  What does this have?
-  - Piece color (does a player have a Piece? Is piece even a class then?)
-  - It can either be your turn or not your turn (in gameboard?)
-  */
 
+/** The player class has information about whose turn it is and which
+ *  color belongs to whom.
+ */
+class Player {
   constructor(color, myTurn) {
     this.color = color;
     this.myTurn = myTurn;
   }
 }
 
-class Piece {
-  /*
-  What does this have?
-  - Color
-  */
 
+/** Pieces are inserted into the gameboard as the game continues. This class
+ *  currently only has information about the piece color, but could be
+ *  expanded to describe different types of pieces (anvils, 2x's, etc.).
+ */
+class Piece {
   constructor(color) {
     this.color = color;
   }
-
 }
-
-
 
 
 /*
 
-Notes zone
+# Notes zone
 
-What happens in a game of connect five?
+## What happens in a game of connect five?
 
-Let the players choose their colors (using a small form)
-On form submission, the game board is displayed
-Make a game board
-  Include a top row that allows for clicking to drop a piece
-  The rest of the rows can contain pieces (1 or 2) or be null
-Display the game board on the DOM
-Listen for clicks, and fill the board (or refuse to fill it) appropriately
-Alternate the players' turns
-Keep checking for a win every time a piece is placed
-(Also watch for the stalemate case)
-If a win or stalemate happens, shut off the game
+- Let the players choose their colors (using a small form)
+- On form submission, the game board is displayed
+- Make a game board
+  - Include a top row that allows for clicking to drop a piece
+  - The rest of the rows can contain pieces (1 or 2) or be null
+- Display the game board on the DOM
+- Listen for clicks, and fill the board (or refuse to fill it) appropriately
+- Alternate the players' turns
+- Keep checking for a win every time a piece is placed
+- (Also watch for the stalemate case)
+- If a win or stalemate happens, shut off the game
   - Display a congratulatory or confused message
   - Offer a restart button
 
